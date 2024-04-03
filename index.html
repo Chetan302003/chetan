@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Recommendation System</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Food Recommendation System</h1>
+        <h2 style="color: black; font-weight: bold;">Top Recommendation:</h2>
+        {% if recommendations %}
+             {% for recommendation in recommendations %}
+              <li>{{ recommendation._id }} - {{ recommendation.itemQty }}</li>
+        {% endfor %}
+        {% else %}
+            <p>No recommendations available.</p>
+        {% endif %}
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <script>
+        var labels = [];
+        var data = [];
+        {% for recommendation in recommendations %}
+            labels.push("{{ recommendation.item }}");
+            data.push({{ recommendation.quantity }});
+        {% endfor %}
+    
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Most Ordered Food Items',
+                    data: data,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+    
+</body>
+</html>
